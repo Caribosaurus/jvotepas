@@ -4,6 +4,7 @@
     <h2>{{ info?.nomCirconscription }}</h2>
     <ul class="no-bullets">
       <li v-for="candidat in info.candidats" v-bind:key="candidat">
+        <span class="dot" :style="listItemStyle(candidat)"></span>
         ({{ candidat.abreviationPartiPolitique }}) {{ candidat.prenom }}
         {{ candidat.nom }} {{ candidat.tauxVote }}%
       </li>
@@ -26,7 +27,7 @@ export default {
   props: {},
   data(): {
     colors: Record<string, string>;
-    info: any
+    info: any;
   } {
     return {
       colors: {
@@ -39,7 +40,15 @@ export default {
       info: this.info,
     };
   },
-  methods: {},
+  methods: {
+    listItemStyle: function (candidat: any) {
+      return {
+        "background-color": (this as any).colors[
+          candidat.abreviationPartiPolitique
+        ],
+      };
+    },
+  },
   mounted() {
     this.map = L.map("mapContainer").setView([45.472, -73.685], 5);
     const url =
@@ -58,20 +67,24 @@ export default {
             layer.feature.properties.name.trim()
           );
           layer.setStyle({
-            color:
-              this.colors[circon.candidats[0].abreviationPartiPolitique ?? ""], // More red than green and blue => redish color
+            color: this.colors[circon.candidats[0].abreviationPartiPolitique],
             weight: 4,
           });
           layer.on({
             mouseover: (e: any) => {
-              const circon = this.circonscriptionMap.get(
-                e.target.feature.properties.name.trim()
-              );
-              console.log(e.target.feature.properties.name,circon);
               this.info = circon;
+              layer.setStyle({
+                fillOpacity: 0.5,
+              });
             },
             mouseout: (e: any) => {
+              layer.setStyle({
+                fillOpacity: 0.2,
+              });
               this.info = null;
+            },
+            click: (e: any) => {
+              this.map.fitBounds(layer.getBounds());
             },
           });
         });
@@ -157,7 +170,17 @@ ul.no-bullets {
   /* Remove bullets */
   padding: 0;
   /* Remove padding */
-  margin: 0;
+  margin: 5px;
   /* Remove margins */
+}
+li {
+  padding: auto;
+}
+.dot {
+  height: 1em;
+  width: 1em;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
 }
 </style>
