@@ -23,9 +23,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: copy assets
-        run: cp -r src/assets/file.kml dist/assets/file.kml
-
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:

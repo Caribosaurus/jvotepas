@@ -48,7 +48,7 @@ export default {
     customPane.style.zIndex = 399; // put just behind the standard overlay pane which is at 400
 
     const circonLayer = omnivore
-      .kml("src/assets/file.kml")
+      .kml("/jvotepas/file.kml")
       .addTo(this.map)
       .on("ready", () => {
         circonLayer.eachLayer((layer: any) => {
