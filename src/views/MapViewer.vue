@@ -26,6 +26,7 @@ export default {
   props: {},
   data(): {
     colors: Record<string, string>;
+    info: any
   } {
     return {
       colors: {
@@ -34,7 +35,8 @@ export default {
         QS: "#FF5505",
         PLQ: "#EC232D",
         NVP: "#000000",
-      }
+      },
+      info: this.info,
     };
   },
   methods: {},
@@ -62,9 +64,11 @@ export default {
           });
           layer.on({
             mouseover: (e: any) => {
-              this.info = this.circonscriptionMap.get(
+              const circon = this.circonscriptionMap.get(
                 e.target.feature.properties.name.trim()
               );
+              console.log(e.target.feature.properties.name,circon);
+              this.info = circon;
             },
             mouseout: (e: any) => {
               this.info = null;
