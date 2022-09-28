@@ -130,7 +130,7 @@ export default {
 <template>
   <div id="mapContainer"></div>
   <div id="info" v-if="info">
-    <CirconscriptionToolbox :info="info" :colors="colors" />
+    <CirconscriptionToolbox :circonscription="info" :colors="colors" />
   </div>
 </template>
 

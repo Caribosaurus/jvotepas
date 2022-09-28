@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h2>{{ info.nomCirconscription }}</h2>
+    <vc-donut :sections="sections" :total="circonscription.nbElecteurInscrit">{{
+      circonscription.nomCirconscription
+    }}</vc-donut>
     <ul class="no-bullets">
       <li v-for="candidat in candidats" v-bind:key="candidat">
         <span class="dot" :style="listItemStyle(candidat)"></span>
@@ -19,10 +21,18 @@ export default {
   },
   computed: {
     candidats(): Array<any> {
-      return (this as any).info.candidats.slice(0, 5);
+      return (this as any).circonscription.candidats.slice(0, 5);
+    },
+    sections(): Array<any> {
+      return (this as any).candidats.map((candidat: any) => {
+        return {
+          value: candidat.nbVoteTotal,
+          color: (this as any).colors[candidat.abreviationPartiPolitique],
+        };
+      });
     },
   },
-  props: ["info", "colors"],
+  props: ["circonscription", "colors"],
   methods: {
     listItemStyle: function (candidat: any) {
       return {
@@ -36,22 +46,8 @@ export default {
 };
 </script>
 <style scoped>
-#info {
-  position: fixed;
-  right: 1em;
-  top: 1em;
-  padding: 6px 8px;
-  font: 14px/16px Arial, Helvetica, sans-serif;
-  background: white;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
-  margin: 0 5px;
-  z-index: 1000000000000;
-  color: #888;
-}
 h2 {
-    color: black;
+  color: black;
 }
 ul.no-bullets {
   list-style-type: none;
