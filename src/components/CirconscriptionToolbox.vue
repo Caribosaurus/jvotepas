@@ -4,8 +4,10 @@
     <ul class="no-bullets">
       <li v-for="candidat in candidats" v-bind:key="candidat">
         <span class="dot" :style="listItemStyle(candidat)"></span>
-        ({{ candidat.abreviationPartiPolitique }}) {{ candidat.prenom }}
-        {{ candidat.nom }} {{ candidat.tauxVote }}%
+        {{ candidat.abreviationPartiPolitique }}, {{ candidat.prenom }}
+        {{ candidat.nom }}:
+        {{ Number(candidat.nbVoteTotal).toLocaleString() }}
+        ({{ candidat.tauxVote }}%)
       </li>
     </ul>
   </div>
@@ -48,7 +50,9 @@ export default {
   z-index: 1000000000000;
   color: #888;
 }
-
+h2 {
+    color: black;
+}
 ul.no-bullets {
   list-style-type: none;
   /* Remove bullets */

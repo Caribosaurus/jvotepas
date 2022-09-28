@@ -13,7 +13,7 @@ export default {
   name: "LeafletMap",
   props: {},
   components: {
-    CirconscriptionToolbox
+    CirconscriptionToolbox,
   },
   data(): {
     colors: Record<string, string>;
@@ -49,7 +49,9 @@ export default {
             layer.feature.properties.name.trim()
           );
           layer.setStyle({
-            color: this.colors[circon.candidats[0].abreviationPartiPolitique],
+            fillColor:
+              this.colors[circon.candidats[0].abreviationPartiPolitique],
+            color: "black",
             weight: 1,
           });
           layer.on({
@@ -149,7 +151,6 @@ export default {
   border-radius: 5px;
   margin: 0 5px;
   z-index: 1000000000000;
-  color: #888;
+  color: rgb(113, 113, 113);
 }
-
 </style>
