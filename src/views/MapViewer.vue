@@ -1,22 +1,9 @@
-<template>
-  <div id="mapContainer"></div>
-  <div id="info" v-if="info">
-    <h2>{{ info?.nomCirconscription }}</h2>
-    <ul class="no-bullets">
-      <li v-for="candidat in info.candidats" v-bind:key="candidat">
-        <span class="dot" :style="listItemStyle(candidat)"></span>
-        ({{ candidat.abreviationPartiPolitique }}) {{ candidat.prenom }}
-        {{ candidat.nom }} {{ candidat.tauxVote }}%
-      </li>
-    </ul>
-  </div>
-</template>
-
 <script lang="ts">
 import "leaflet/dist/leaflet.css";
 import { resultats } from "../fixturesResultats";
 import L from "leaflet";
 import omnivore from "@mapbox/leaflet-omnivore";
+import CirconscriptionToolbox from "../components/CirconscriptionToolbox.vue";
 
 export default {
   map: null as any,
@@ -25,6 +12,9 @@ export default {
   colors: {} as Record<string, string>,
   name: "LeafletMap",
   props: {},
+  components: {
+    CirconscriptionToolbox
+  },
   data(): {
     colors: Record<string, string>;
     info: any;
@@ -40,17 +30,9 @@ export default {
       info: this.info,
     };
   },
-  methods: {
-    listItemStyle: function (candidat: any) {
-      return {
-        "background-color": (this as any).colors[
-          candidat.abreviationPartiPolitique
-        ],
-      };
-    },
-  },
+
   mounted() {
-    this.map = L.map("mapContainer").setView([45.472, -73.685], 5);
+    this.map = L.map("mapContainer").setView([48.540167, -73.931064], 6);
     const url =
       "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
     L.tileLayer(url).addTo(this.map);
@@ -59,7 +41,7 @@ export default {
     customPane.style.zIndex = 399; // put just behind the standard overlay pane which is at 400
 
     const circonLayer = omnivore
-      .kml("/jvotepas/file.kml")
+      .kml("/file.kml")
       .addTo(this.map)
       .on("ready", () => {
         circonLayer.eachLayer((layer: any) => {
@@ -81,7 +63,6 @@ export default {
               layer.setStyle({
                 fillOpacity: 0.2,
               });
-              this.info = null;
             },
             click: (e: any) => {
               this.map.fitBounds(layer.getBounds());
@@ -144,12 +125,18 @@ export default {
 };
 </script>
 
+<template>
+  <div id="mapContainer"></div>
+  <div id="info" v-if="info">
+    <CirconscriptionToolbox :info="info" :colors="colors" />
+  </div>
+</template>
+
 <style scoped>
 #mapContainer {
   width: 100vw;
   height: 100vh;
 }
-
 #info {
   position: fixed;
   right: 1em;
@@ -165,22 +152,4 @@ export default {
   color: #888;
 }
 
-ul.no-bullets {
-  list-style-type: none;
-  /* Remove bullets */
-  padding: 0;
-  /* Remove padding */
-  margin: 5px;
-  /* Remove margins */
-}
-li {
-  padding: auto;
-}
-.dot {
-  height: 1em;
-  width: 1em;
-  background-color: #bbb;
-  border-radius: 50%;
-  display: inline-block;
-}
 </style>

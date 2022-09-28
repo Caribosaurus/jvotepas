@@ -1,3 +1,28 @@
+export interface Circonscription {
+  numeroCirconscription: number;
+  nomCirconscription: string;
+  iso8601DateMAJ: string;
+  isResultatsFinaux: boolean;
+  nbBureauComplete: number;
+  nbBureauTotal: number;
+  nbVoteValide: number;
+  nbVoteRejete: number;
+  nbVoteExerce: number;
+  nbElecteurInscrit: number;
+  tauxVoteValide: number;
+  tauxVoteRejete: number;
+  tauxParticipation: string;
+  candidats: Array<{
+    numeroCandidat: number;
+    nom: string;
+    prenom: string;
+    numeroPartiPolitique: number;
+    abreviationPartiPolitique: string;
+    nbVoteTotal: number;
+    tauxVote: number;
+    nbVoteAvance: number;
+  }>;
+}
 export const resultats = {
   partisPolitiques: [
     {
