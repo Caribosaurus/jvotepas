@@ -2,7 +2,7 @@
   <div>
     <h2>{{ info.nomCirconscription }}</h2>
     <ul class="no-bullets">
-      <li v-for="candidat in info.candidats" v-bind:key="candidat">
+      <li v-for="candidat in candidats" v-bind:key="candidat">
         <span class="dot" :style="listItemStyle(candidat)"></span>
         ({{ candidat.abreviationPartiPolitique }}) {{ candidat.prenom }}
         {{ candidat.nom }} {{ candidat.tauxVote }}%
@@ -15,6 +15,11 @@ export default {
   data() {
     return {};
   },
+  computed: {
+    candidats(): Array<any> {
+      return (this as any).info.candidats.slice(0, 5);
+    },
+  },
   props: ["info", "colors"],
   methods: {
     listItemStyle: function (candidat: any) {
@@ -25,9 +30,7 @@ export default {
       };
     },
   },
-  setup(props: any) {
-    console.log(props.title);
-  },
+  setup(props: any) {},
 };
 </script>
 <style scoped>

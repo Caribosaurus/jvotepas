@@ -50,7 +50,7 @@ export default {
           );
           layer.setStyle({
             color: this.colors[circon.candidats[0].abreviationPartiPolitique],
-            weight: 4,
+            weight: 1,
           });
           layer.on({
             mouseover: (e: any) => {
