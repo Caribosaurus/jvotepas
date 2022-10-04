@@ -1,6 +1,6 @@
 <script lang="ts">
 import "leaflet/dist/leaflet.css";
-import { resultats } from "../fixturesResultats";
+import { resultats } from "../resultats2022";
 import L from "leaflet";
 import omnivore from "@mapbox/leaflet-omnivore";
 import CirconscriptionToolbox from "../components/CirconscriptionToolbox.vue";
@@ -23,6 +23,7 @@ export default {
       colors: {
         CAQ: "#01A8E7",
         PQ: "#1E2A5C",
+        PCQ: "#630FD1",
         QS: "#FF5505",
         PLQ: "#EC232D",
         NVP: "#000000",
@@ -101,7 +102,8 @@ export default {
               ...candidat,
               abreviationPartiPolitique: candidat.abreviationPartiPolitique
                 .substring(0, 6)
-                .replaceAll(".", ""),
+                .replaceAll(".", "")
+                .replaceAll("-", ""),
               tauxVote:
                 Math.round(
                   (candidat.nbVoteTotal / circonscription.nbElecteurInscrit) *
