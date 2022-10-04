@@ -1,13 +1,18 @@
 <template>
   <div id="container">
     <div id="MapViewer">
-      <MapViewer />
+      <MapViewer :annee="annee" />
     </div>
   </div>
 </template>
 <script lang="ts">
 import MapViewer from "../views/MapViewer.vue";
 export default {
+  data() :any {
+    return{
+      annee: "2022",
+    }
+  },
   components: {
     MapViewer,
   },
@@ -20,7 +25,7 @@ export default {
   height: 90vh;
   margin: 5%;
 }
-#container{
+#container {
   width: 100%;
   height: 100%;
 }

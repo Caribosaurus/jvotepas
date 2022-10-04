@@ -1,9 +1,10 @@
 <script lang="ts">
 import "leaflet/dist/leaflet.css";
-import { resultats } from "../resultats2022";
 import L from "leaflet";
 import omnivore from "@mapbox/leaflet-omnivore";
 import CirconscriptionToolbox from "../components/CirconscriptionToolbox.vue";
+import { resultats as resultats2018 } from "../resultats2018";
+import { resultats as resultats2022 } from "../resultats2022";
 
 export default {
   map: null as any,
@@ -11,7 +12,7 @@ export default {
   info: null as any,
   colors: {} as Record<string, string>,
   name: "LeafletMap",
-  props: {},
+  props: ["annee"],
   components: {
     CirconscriptionToolbox,
   },
@@ -60,7 +61,6 @@ export default {
           });
           layer.on({
             mouseover: (e: any) => {
-              this.info = circon;
               layer.setStyle({
                 fillOpacity: 0.5,
               });
@@ -71,6 +71,7 @@ export default {
               });
             },
             click: (e: any) => {
+              this.info = circon;
               this.map.fitBounds(layer.getBounds());
             },
           });
@@ -78,10 +79,15 @@ export default {
       });
   },
   computed: {
-    // need annotation
     circonscriptionMap(): Map<string, unknown> {
+      const resultMapper: Record<string, unknown> = {
+        2018: resultats2018,
+        2022: resultats2022,
+      };
       const circonscriptionMap = new Map<string, unknown>();
-      for (let circonscription of resultats.circonscriptions) {
+      for (let circonscription of (
+        resultMapper[(this as any).annee as string] as any
+      ).circonscriptions) {
         circonscription = {
           ...circonscription,
           candidats: [...circonscription.candidats],
@@ -98,9 +104,11 @@ export default {
           nbVoteTotal: abstentions,
           tauxVote: 0,
         });
-        circonscription.candidats.sort((a, b) => b.nbVoteTotal - a.nbVoteTotal);
+        circonscription.candidats.sort(
+          (a: any, b: any) => b.nbVoteTotal - a.nbVoteTotal
+        );
         circonscription.candidats = circonscription.candidats.map(
-          (candidat) => {
+          (candidat: any) => {
             return {
               ...candidat,
               abreviationPartiPolitique: candidat.abreviationPartiPolitique
