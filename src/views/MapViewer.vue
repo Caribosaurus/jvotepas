@@ -33,7 +33,10 @@ export default {
   },
 
   mounted() {
-    this.map = L.map("mapContainer").setView([48.540167, -73.931064], 6);
+    this.map = L.map("mapContainer", { zoomControl: false }).setView(
+      [48.540167, -73.931064],
+      6
+    );
     const url =
       "https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
     L.tileLayer(url).addTo(this.map);
@@ -138,11 +141,11 @@ export default {
 
 <style scoped>
 #mapContainer {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 #info {
-  position: fixed;
+  position: absolute;
   right: 1em;
   top: 1em;
   padding: 6px 8px;

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import MapViewer from "../views/MapViewer.vue";
+import HomeViewer from "../views/HomeViewer.vue";
 
 const router = createRouter({
   history: createWebHistory((import.meta as any).env.BASE_URL),
@@ -7,7 +7,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: MapViewer,
+      component: HomeViewer,
     },
   ],
 });
