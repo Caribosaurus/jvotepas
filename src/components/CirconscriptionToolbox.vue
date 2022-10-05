@@ -20,17 +20,19 @@ export default {
             }: ${Number(candidat.nbVoteTotal).toLocaleString()} (${
               candidat.tauxVote
             }%)`,
-            value: candidat.nbVoteTotal,
+            value: Number(candidat.nbVoteTotal),
             color: (this as any).colors[candidat.abreviationPartiPolitique],
           };
         })
         .slice(0, 5);
     },
     total(): number {
-      return (this as any).circonscription.candidats.reduce(
-        (previousValue: any, currentValue: any) =>
-          previousValue + currentValue.nbVoteTotal,
-        0
+      return Math.ceil(
+        (this as any).sections.reduce(
+          (previousValue: any, currentValue: any) =>
+            previousValue + currentValue.value,
+          0
+        )
       );
     },
   },

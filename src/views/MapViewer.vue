@@ -3,15 +3,14 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import omnivore from "@mapbox/leaflet-omnivore";
 import CirconscriptionToolbox from "../components/CirconscriptionToolbox.vue";
-import { resultats as resultats2018 } from "../resultats2018";
-import { resultats as resultats2022 } from "../resultats2022";
+
 export default {
   map: null as any,
   circonscriptionMap: null as unknown as Map<string, any>,
   info: null as any,
   colors: {} as Record<string, string>,
   name: "LeafletMap",
-  props: ["annee", "abstention", "colors", "distribution"],
+  props: ["circonscriptionMap", "colors"],
   components: {
     CirconscriptionToolbox,
   },
@@ -25,40 +24,40 @@ export default {
   methods: {
     redraw() {
       (this as any).circonLayer?.eachLayer((layer: any) => {
-        const circon = (this as any).circonscriptionMap.get(
-          layer.feature.properties.name.trim()
-        );
-        layer.setStyle({
-          fillColor: (this as any).colors[circon.candidats[0].abreviationPartiPolitique],
-          color: "black",
-          weight: 1,
-        });
-        layer.on({
-          mouseover: (e: any) => {
-            layer.setStyle({
-              fillOpacity: 0.5,
-            });
-          },
-          mouseout: (e: any) => {
-            layer.setStyle({
-              fillOpacity: 0.2,
-            });
-          },
-          click: (e: any) => {
-            (this as any).info = circon;
-            (this as any).map.fitBounds(layer.getBounds());
-          },
-        });
+        if ((this as any).circonscriptionMap) {
+          const circon = (this as any).circonscriptionMap.get(
+            layer.feature.properties.name.trim()
+          );
+          layer.setStyle({
+            fillColor: (this as any).colors[
+              circon.candidats[0].abreviationPartiPolitique
+            ],
+            color: "black",
+            weight: 1,
+          });
+          layer.on({
+            mouseover: (e: any) => {
+              layer.setStyle({
+                fillOpacity: 0.5,
+              });
+            },
+            mouseout: (e: any) => {
+              layer.setStyle({
+                fillOpacity: 0.2,
+              });
+            },
+            click: (e: any) => {
+              (this as any).info = circon;
+              (this as any).map.fitBounds(layer.getBounds());
+            },
+          });
+        }
       });
     },
   },
   watch: {
     // It listens to the change in prop name
-    annee: function () {
-      // print out when the name changes
-      (this as any).redraw();
-    },
-    abstention: function () {
+    circonscriptionMap: function () {
       // print out when the name changes
       (this as any).redraw();
     },
@@ -82,71 +81,7 @@ export default {
         (this as any).redraw();
       });
   },
-  computed: {
-    circonscriptionMap(): Map<string, unknown> {
-      const resultMapper: Record<string, unknown> = {
-        2018: resultats2018,
-        2022: resultats2022,
-      };
-      const circonscriptionMap = new Map<string, unknown>();
-      for (let circonscription of (
-        resultMapper[(this as any).annee as string] as any
-      ).circonscriptions) {
-        circonscription = {
-          ...circonscription,
-          candidats: [...circonscription.candidats],
-        };
-        const abstentions =
-          circonscription.nbElecteurInscrit - circonscription.nbVoteExerce;
-        if ((this as any).abstention) {
-          circonscription.candidats.push({
-            numeroCandidat: 0,
-            numeroPartiPolitique: 0,
-            nom: "Pas",
-            prenom: "Ne Vote",
-            abreviationPartiPolitique: "NVP",
-            nbVoteAvance: 0,
-            nbVoteTotal: abstentions,
-            tauxVote: 0,
-          });
-        }
-        circonscription.candidats = circonscription.candidats.map(
-          (candidat: any) => {
-            const abreviationPartiPolitique = candidat.abreviationPartiPolitique
-              .substring(0, 6)
-              .replaceAll(".", "")
-              .replaceAll("-", "");
-            const nbVoteTotal = !(this as any).abstention
-              ? candidat.nbVoteTotal +
-                abstentions * (this as any).distribution[abreviationPartiPolitique]
-              : candidat.nbVoteTotal;
-            return {
-              ...candidat,
-              abreviationPartiPolitique,
-              nbVoteTotal,
-              tauxVote:
-                Math.round(
-                  (nbVoteTotal /
-                    ((this as any).abstention
-                      ? circonscription.nbElecteurInscrit
-                      : circonscription.nbVoteExerce)) *
-                    100 *
-                    100
-                ) / 100,
-            };
-          }
-        );
-        circonscription.candidats.sort(
-          (a: any, b: any) => b.nbVoteTotal - a.nbVoteTotal
-        );
-        circonscriptionMap.set(
-          circonscription.numeroCirconscription.toString(),
-          circonscription
-        );
-      }
-      return circonscriptionMap;
-    },
-  },
+
   onBeforeUnmount() {
     if (this.map) {
       this.map.remove();
