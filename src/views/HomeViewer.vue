@@ -76,12 +76,9 @@
     <div id="resultats" class="row-6">
       <ResultViewer :colors="colors" :resultsMap="resultsMap" />
     </div>
-
   </div>
-  <div class="row">
-    <div id="MapViewer" class="col-12">
-      <MapViewer :circonscriptionMap="circonscriptionMap" :colors="colors" />
-    </div>
+  <div class="row" id="MapViewer">
+    <MapViewer :circonscriptionMap="circonscriptionMap" :colors="colors" />
   </div>
 </template>
 <script lang="ts">
@@ -207,9 +204,8 @@ export default {
 </script>
 <style lang="sass" scoped>
 #MapViewer
-  position: relative
-  width: 90vw
-  height: 90vh
+  align-items: stretch
+  height: 65vh
 .my-custom-toggle
   border: 1px solid #027be3
 #selectors

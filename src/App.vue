@@ -5,10 +5,4 @@ import { RouterView } from "vue-router";
 <template>
   <RouterView />
 </template>
-
-<style>
-#app {
-  margin: 0;
-  padding: 0;
-}
-</style>
+<style lang="sass" scoped></style>
