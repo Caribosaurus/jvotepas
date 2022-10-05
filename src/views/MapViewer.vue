@@ -7,7 +7,6 @@ import CirconscriptionToolbox from "../components/CirconscriptionToolbox.vue";
 export default {
   map: null as any,
   circonscriptionMap: null as unknown as Map<string, any>,
-  info: null as any,
   colors: {} as Record<string, string>,
   name: "LeafletMap",
   props: ["circonscriptionMap", "colors"],
@@ -15,10 +14,10 @@ export default {
     CirconscriptionToolbox,
   },
   data(): {
-    info: any;
+    circonscription: any;
   } {
     return {
-      info: this.info,
+      circonscription: null,
     };
   },
   methods: {
@@ -47,7 +46,7 @@ export default {
               });
             },
             click: (e: any) => {
-              (this as any).info = circon;
+              (this as any).circonscription = circon;
               (this as any).map.fitBounds(layer.getBounds());
             },
           });
@@ -92,8 +91,11 @@ export default {
 
 <template>
   <div id="mapContainer"></div>
-  <div id="info" v-if="info">
-    <CirconscriptionToolbox :circonscription="info" :colors="colors" />
+  <div id="circonscription" v-if="circonscription">
+    <CirconscriptionToolbox
+      :circonscription="circonscription"
+      :colors="colors"
+    />
   </div>
 </template>
 
@@ -102,7 +104,7 @@ export default {
   width: 100%;
   height: 100%;
 }
-#info {
+#circonscription {
   position: absolute;
   right: 1em;
   top: 1em;

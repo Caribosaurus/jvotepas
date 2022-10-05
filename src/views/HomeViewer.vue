@@ -1,6 +1,6 @@
 <template>
-  <div id="container">
-    <div id="selectors" class="q-pa-md">
+  <div class="row" id="header">
+    <div id="selectors" class="row-6">
       <q-btn-toggle
         v-model="annee"
         class="my-custom-toggle"
@@ -11,10 +11,11 @@
         color="white"
         text-color="primary"
         :options="[
-          { label: '2018', value: '2018' },
-          { label: '2022', value: '2022' },
+          { label: 'Élection 2018', value: '2018' },
+          { label: 'Élection 2022', value: '2022' },
         ]"
       />
+      <p>Quoi faire avec les abstentions?</p>
       <q-btn-toggle
         v-model="abstention"
         class="my-custom-toggle"
@@ -25,8 +26,8 @@
         color="white"
         text-color="primary"
         :options="[
-          { label: 'Parti', value: true },
-          { label: 'Distribuer', value: false },
+          { label: 'Compter comme un parti', value: true },
+          { label: 'Distribuer les votes', value: false },
         ]"
       />
       <div v-if="!abstention">
@@ -72,13 +73,20 @@
         />
       </div>
     </div>
-    <div id="MapViewer">
+    <div id="resultats" class="row-6">
+      <ResultViewer :colors="colors" :resultsMap="resultsMap" />
+    </div>
+
+  </div>
+  <div class="row">
+    <div id="MapViewer" class="col-12">
       <MapViewer :circonscriptionMap="circonscriptionMap" :colors="colors" />
     </div>
   </div>
 </template>
 <script lang="ts">
-import MapViewer from "../views/MapViewer.vue";
+import MapViewer from "./MapViewer.vue";
+import ResultViewer from "../components/ResultViewer.vue";
 import { resultats as resultats2018 } from "../resultats2018";
 import { resultats as resultats2022 } from "../resultats2022";
 export default {
@@ -175,9 +183,25 @@ export default {
       }
       return circonscriptionMap;
     },
+    resultsMap(): Map<string, number> {
+      const results = new Map<string, number>();
+      for (const circonscription of (
+        this.circonscriptionMap as unknown as Map<string, any>
+      ).values()) {
+        const candidats = circonscription.candidats.slice(0, 5);
+        const gagnant = candidats[0];
+
+        results.set(
+          gagnant.abreviationPartiPolitique,
+          (results.get(gagnant.abreviationPartiPolitique) || 0) + 1
+        );
+      }
+      return results;
+    },
   },
   components: {
     MapViewer,
+    ResultViewer,
   },
 };
 </script>
@@ -186,10 +210,11 @@ export default {
   position: relative
   width: 90vw
   height: 90vh
-#container
-  width: 100%
-  height: 100%
-  padding: 5%
 .my-custom-toggle
   border: 1px solid #027be3
+#selectors
+  padding: 0.5em
+#header
+  align-items: center
+  justify-content: center
 </style>
